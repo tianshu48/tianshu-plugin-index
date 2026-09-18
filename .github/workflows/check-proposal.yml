@@ -1,0 +1,29 @@
+name: Check proposal
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test scripts/lib.test.mjs
+      - name: Check proposal
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.sha }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          INDEX_REPO: ${{ github.repository }}
+          TIANSHU_ORIGIN: ${{ vars.TIANSHU_ORIGIN }}
+          PK_SERVER_HEX: ${{ vars.PK_SERVER_HEX }}
+        run: node scripts/check-proposal.mjs

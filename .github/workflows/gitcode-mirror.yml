@@ -1,0 +1,24 @@
+name: Mirror to GitCode
+
+on:
+  push:
+  delete:
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Push mirror to gitcode.com
+        env:
+          GITCODE_TOKEN: ${{ secrets.GITCODE_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "${GITCODE_TOKEN:-}"
+          src="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          dst="https://oauth2:${GITCODE_TOKEN}@gitcode.com/${GITHUB_REPOSITORY}.git"
+          git clone --mirror "$src" repo.git
+          git -C repo.git push --mirror "$dst"

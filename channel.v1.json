@@ -1,0 +1,4 @@
+{
+  "payload_json": "{\"schema\":1,\"channel\":\"stable\",\"generated_at\":1789635351,\"volumes\":{\"tianshu48/tianshu-plugin-packs\":{\"github\":\"tianshu48/tianshu-plugin-packs\",\"gitcode\":\"tianshu48/tianshu-plugin-packs\"}},\"files\":[{\"path\":\"index/p0000.json\",\"sha256\":\"3658f0c1fc9b7da2fcd68447b0f88b2f026abe267412e2c6f448993feb4a3ae2\",\"id_lo\":\"\",\"id_hi\":\"\"}]}",
+  "signature_hex": "91dfe3450c23a42d3d481da4e4b4eb584acee5ff325c9e2510b0e27fc82c087a68caf235e6d5316bf662f942379d2aca820a3cac4ea70c5acf0b993f1452a60b"
+}
