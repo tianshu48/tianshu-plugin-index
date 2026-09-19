@@ -1,0 +1,37 @@
+name: Yank listing
+
+on:
+  workflow_dispatch:
+    inputs:
+      id:
+        description: plugin_id to drop
+        required: true
+        type: string
+      version:
+        description: version; empty drops every version of that id
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  yank:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Drop and resign
+        env:
+          YANK_ID: ${{ inputs.id }}
+          YANK_VERSION: ${{ inputs.version }}
+          INDEX_SK: ${{ secrets.INDEX_SK }}
+          REWRITE_INDEX: "1"
+        run: |
+          node scripts/yank.mjs
+          node scripts/ingest.mjs
