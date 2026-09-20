@@ -60,7 +60,13 @@ function pushPack(packs, packPath, artifact, tag) {
 function appendIndex(row) {
   const index = JSON.parse(readFileSync("index.v1.json", "utf8"));
   index.plugins = index.plugins || [];
-  if (index.plugins.some((r) => r.plugin_id === row.plugin_id && r.version === row.version)) {
+  if (index.plugins.some(
+    (r) =>
+      r.plugin_id === row.plugin_id &&
+      r.version === row.version &&
+      (r.os || "") === (row.os || "") &&
+      (r.arch || "") === (row.arch || ""),
+  )) {
     throw new Error("already listed");
   }
   index.plugins.push(row);
@@ -165,12 +171,12 @@ async function ingestCommunity(file, origin, packs) {
 }
 
 async function ingestOfficial(file, packs) {
-  const m = /^official\/([^/]+)\/([^/]+)\.json$/.exec(file);
-  const p = parseOfficialProposal(readFileSync(file, "utf8"), m[1], m[2]);
+  const m = /^official\/([^/]+)\/([^/]+)\/([^/]+)\.json$/.exec(file);
+  const p = parseOfficialProposal(readFileSync(file, "utf8"), m[1], m[2], m[3]);
   const pk = officialPkHex();
   const { artifact, desc } = await loadSignedPack(p, pk, { native: true });
-  const packPath = `official/${p.plugin_id}/${p.version}.tsz`;
-  const tag = `${p.plugin_id}-${p.version}`;
+  const packPath = `official/${p.plugin_id}/${p.version}/${p.os}-${p.arch}.tsz`;
+  const tag = `${p.plugin_id}-${p.version}-${p.os}-${p.arch}`;
   pushPack(packs, packPath, artifact, tag);
   appendIndex({
     plugin_id: p.plugin_id,
@@ -185,8 +191,10 @@ async function ingestOfficial(file, packs) {
     pack: { volume: "tianshu48/tianshu-plugin-packs", tag, path: packPath },
     ...listingCompat(p),
   });
-  mkdirSync(dirname(`ingested/official/${p.plugin_id}/${p.version}.json`), { recursive: true });
-  renameSync(file, `ingested/official/${p.plugin_id}/${p.version}.json`);
+  mkdirSync(dirname(`ingested/official/${p.plugin_id}/${p.version}/${p.os}-${p.arch}.json`), {
+    recursive: true,
+  });
+  renameSync(file, `ingested/official/${p.plugin_id}/${p.version}/${p.os}-${p.arch}.json`);
 }
 
 function publishListing(sk, message) {
@@ -205,7 +213,7 @@ async function main() {
   const head = process.env.GITHUB_SHA;
   const rewrite = process.env.REWRITE_INDEX === "1";
   const community = addedFiles(before, head, /^proposals\/[^/]+\/[^/]+\.json$/);
-  const official = addedFiles(before, head, /^official\/[^/]+\/[^/]+\.json$/);
+  const official = addedFiles(before, head, /^official\/[^/]+\/[^/]+\/[^/]+\.json$/);
   const indexSk = process.env.INDEX_SK || "";
   if (community.length === 0 && official.length === 0) {
     if (!rewrite) {

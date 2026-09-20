@@ -160,10 +160,14 @@ export function parseProposal(raw, pathId, pathVer) {
   return p;
 }
 
-export function parseOfficialProposal(raw, pathId, pathVer) {
+export function parseOfficialProposal(raw, pathId, pathVer, pathPlat) {
   const p = typeof raw === "string" ? JSON.parse(raw) : raw;
   if (p.plugin_id !== pathId || p.version !== pathVer) {
     throw new Error("proposal path does not match plugin_id/version");
+  }
+  const plat = /^(linux|windows|macos)-(x86_64|aarch64)$/.exec(pathPlat || "");
+  if (!plat || p.os !== plat[1] || p.arch !== plat[2]) {
+    throw new Error("proposal path does not match os/arch");
   }
   if (!officialPluginId(p.plugin_id)) throw new Error("id is not an official plugin id");
   if (p.user_id) throw new Error("official proposal must not include user_id");
@@ -194,6 +198,8 @@ export function listingCompat(p) {
   if (typeof req === "string" && req.trim()) {
     extra.engines = { tianshu: req.trim() };
   }
+  if (p && (p.os === "linux" || p.os === "windows" || p.os === "macos")) extra.os = p.os;
+  if (p && (p.arch === "x86_64" || p.arch === "aarch64")) extra.arch = p.arch;
   return extra;
 }
 
@@ -207,7 +213,13 @@ export function sortPlugins(plugins) {
     }
     const va = String(a.version);
     const vb = String(b.version);
-    return va < vb ? -1 : va > vb ? 1 : 0;
+    if (va !== vb) return va < vb ? -1 : 1;
+    const oa = String(a.os || "");
+    const ob = String(b.os || "");
+    if (oa !== ob) return oa < ob ? -1 : 1;
+    const aa = String(a.arch || "");
+    const ab = String(b.arch || "");
+    return aa < ab ? -1 : aa > ab ? 1 : 0;
   });
 }
 

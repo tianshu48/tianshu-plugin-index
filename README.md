@@ -8,4 +8,4 @@ The JSON needs `plugin_id`, `version`, `user_id` (your Tianshu account id), `sou
 
 `example.community.template` and ids that use `tianshu` are rejected on this path.
 
-Official plugins use a pull request on this repository only (not a fork): one file at `official/<plugin-id>/<version>.json`, already signed, native pack. Same review-then-merge as community.
+Official plugins use a pull request on this repository only (not a fork): files at `official/<plugin-id>/<version>/<os>-<arch>.json`, already signed, native pack. `os` is `linux` / `windows` / `macos`; `arch` is `x86_64` / `aarch64`. One plugin version per PR; several platforms may share that PR.

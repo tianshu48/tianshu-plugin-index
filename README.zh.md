@@ -8,4 +8,4 @@ JSON 里要有 `plugin_id`、`version`、`user_id`（天枢账号 id）、`sourc
 
 `example.community.template` 和占用 `tianshu` 的 id 在这条路上会被拒绝。
 
-官方插件只在本仓开 PR（不要 fork）：一份 `official/<插件id>/<版本>.json`，必须已签名的 native 包。审核和合并方式和社区一样。
+官方插件只在本仓开 PR（不要 fork）：`official/<插件id>/<版本>/<os>-<arch>.json`，必须已签名的 native 包。`os` 是 `linux` / `windows` / `macos`，`arch` 是 `x86_64` / `aarch64`。一次 PR 一个插件版本，多个目标可以一起。
