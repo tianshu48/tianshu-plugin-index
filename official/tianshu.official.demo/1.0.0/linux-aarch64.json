@@ -1,0 +1,11 @@
+{
+  "plugin_id": "tianshu.official.demo",
+  "version": "1.0.0",
+  "os": "linux",
+  "arch": "aarch64",
+  "pack_url": "https://github.com/tianshu48/tianshu-official-releases/releases/download/tianshu.official.demo-1.0.0-linux-aarch64/tianshu.official.demo-1.0.0-linux-aarch64.tsz",
+  "paid": false,
+  "engines": {
+    "tianshu": ">=1.1.0"
+  }
+}
