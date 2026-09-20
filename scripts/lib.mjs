@@ -181,11 +181,33 @@ export function officialPkHex() {
 export const SHARD_MAX_PLUGINS = 512;
 export const SHARD_MAX_BYTES = 256 * 1024;
 
+export function packSemverCore(s) {
+  const core = String(s ?? "").split(/[-+]/)[0];
+  const p = core.split(".");
+  return [Number(p[0]) || 0, Number(p[1]) || 0, Number(p[2]) || 0];
+}
+
+export function listingCompat(p) {
+  const extra = {};
+  if (p && p.paid === false) extra.paid = false;
+  const req = p?.engines?.tianshu;
+  if (typeof req === "string" && req.trim()) {
+    extra.engines = { tianshu: req.trim() };
+  }
+  return extra;
+}
+
 export function sortPlugins(plugins) {
   plugins.sort((a, b) => {
-    const id = a.plugin_id < b.plugin_id ? -1 : a.plugin_id > b.plugin_id ? 1 : 0;
-    if (id !== 0) return id;
-    return a.version < b.version ? -1 : a.version > b.version ? 1 : 0;
+    if (a.plugin_id !== b.plugin_id) return a.plugin_id < b.plugin_id ? -1 : 1;
+    const A = packSemverCore(a.version);
+    const B = packSemverCore(b.version);
+    for (let i = 0; i < 3; i++) {
+      if (A[i] !== B[i]) return A[i] - B[i];
+    }
+    const va = String(a.version);
+    const vb = String(b.version);
+    return va < vb ? -1 : va > vb ? 1 : 0;
   });
 }
 
