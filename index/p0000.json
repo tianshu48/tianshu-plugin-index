@@ -1,1 +1,1 @@
-{"schema":1,"plugins":[]}
+{"schema":1,"plugins":[{"plugin_id":"nostalgiatan.ping","author_id":"nostalgiatan","channel":"stable","kind":"wasm","version":"1.0.0","abi":3,"title":"Ping","description":"把文本回声到管道。最简社区插件。","pack_sha256":"1f546d4f7d388dd41354e8cb2a13fe4a513f90b2e8e10ca5dc2f000d43521b72","pack_bytes":66995,"pack":{"volume":"tianshu48/tianshu-plugin-packs","tag":"nostalgiatan.ping-1.0.0","path":"community/nostalgiatan.ping/1.0.0.tsz"}}]}

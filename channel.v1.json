@@ -1,4 +1,4 @@
 {
-  "payload_json": "{\"schema\":1,\"channel\":\"stable\",\"generated_at\":1789635351,\"volumes\":{\"tianshu48/tianshu-plugin-packs\":{\"github\":\"tianshu48/tianshu-plugin-packs\",\"gitcode\":\"tianshu48/tianshu-plugin-packs\"}},\"files\":[{\"path\":\"index/p0000.json\",\"sha256\":\"3658f0c1fc9b7da2fcd68447b0f88b2f026abe267412e2c6f448993feb4a3ae2\",\"id_lo\":\"\",\"id_hi\":\"\"}]}",
-  "signature_hex": "91dfe3450c23a42d3d481da4e4b4eb584acee5ff325c9e2510b0e27fc82c087a68caf235e6d5316bf662f942379d2aca820a3cac4ea70c5acf0b993f1452a60b"
+  "payload_json": "{\"schema\":1,\"channel\":\"stable\",\"generated_at\":1789890284,\"volumes\":{\"tianshu48/tianshu-plugin-packs\":{\"github\":\"tianshu48/tianshu-plugin-packs\",\"gitcode\":\"tianshu48/tianshu-plugin-packs\"}},\"files\":[{\"path\":\"index/p0000.json\",\"sha256\":\"3eaa6793e1efb1390dd2c8c32a84368c36e3052c6e8bf70834d77709447190d1\",\"id_lo\":\"nostalgiatan.ping\",\"id_hi\":\"nostalgiatan.ping\"}]}",
+  "signature_hex": "69fdd006b4a75c2a85c8e5c96859dbeb11769cfb8ade0e504e37ea480ec27387265a1a494b764dce10d4e92b5282632ae32b7c77d149f8478cbc38989b9d6900"
 }
