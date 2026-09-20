@@ -40,6 +40,7 @@ test("official proposal rejects user_id and unsigned url", () => {
       },
       "tianshu.official.demo",
       "1.0.0",
+      "linux-x86_64",
     ),
   );
   assert.throws(() =>
@@ -51,16 +52,20 @@ test("official proposal rejects user_id and unsigned url", () => {
       },
       "tianshu.official.demo",
       "1.0.0",
+      "linux-x86_64",
     ),
   );
   const p = parseOfficialProposal(
     {
       plugin_id: "tianshu.official.demo",
       version: "1.0.0",
+      os: "linux",
+      arch: "x86_64",
       pack_url: "https://github.com/tianshu48/x/releases/download/v1/a.tsz",
     },
     "tianshu.official.demo",
     "1.0.0",
+    "linux-x86_64",
   );
   assert.equal(p.plugin_id, "tianshu.official.demo");
 });
@@ -113,10 +118,20 @@ test("sortPlugins uses semver not lexicographic version", () => {
   assert.equal(plugins[1].version, "1.0.10");
 });
 
-test("listingCompat keeps free paid and engines", () => {
-  assert.deepEqual(listingCompat({ paid: false, engines: { tianshu: ">=1.2.0" } }), {
-    paid: false,
-    engines: { tianshu: ">=1.2.0" },
-  });
+test("listingCompat keeps free paid engines and platform", () => {
+  assert.deepEqual(
+    listingCompat({
+      paid: false,
+      engines: { tianshu: ">=1.1.0" },
+      os: "linux",
+      arch: "x86_64",
+    }),
+    {
+      paid: false,
+      engines: { tianshu: ">=1.1.0" },
+      os: "linux",
+      arch: "x86_64",
+    },
+  );
   assert.deepEqual(listingCompat({}), {});
 });

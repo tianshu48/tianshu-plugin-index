@@ -26,8 +26,8 @@ function communityPath(file) {
 }
 
 function officialPath(file) {
-  const m = /^official\/([^/]+)\/([^/]+)\.json$/.exec(file);
-  return m ? { id: m[1], ver: m[2] } : null;
+  const m = /^official\/([^/]+)\/([^/]+)\/([^/]+)\.json$/.exec(file);
+  return m ? { id: m[1], ver: m[2], plat: m[3] } : null;
 }
 
 function sha(buf) {
@@ -61,8 +61,8 @@ async function checkCommunity(file, id, ver, origin) {
   console.log("signed pack ok", sha(artifact));
 }
 
-async function checkOfficial(file, id, ver) {
-  const p = parseOfficialProposal(readFileSync(file, "utf8"), id, ver);
+async function checkOfficial(file, id, ver, plat) {
+  const p = parseOfficialProposal(readFileSync(file, "utf8"), id, ver, plat);
   const artifact = await fetchBytes(p.pack_url);
   const parts = unpackTsp2(artifact);
   if (!isNativeLogic(parts.logic)) throw new Error("official pack is not native");
@@ -96,13 +96,19 @@ async function main() {
   }
   if (official.length) {
     if (files.length !== official.length) {
-      throw new Error("official pull request may only add official/<id>/<version>.json");
+      throw new Error("official pull request may only add official/<id>/<version>/<os>-<arch>.json");
     }
-    if (official.length !== 1) throw new Error("one official proposal per pull request");
+    const id = official[0].id;
+    const ver = official[0].ver;
+    if (official.some((o) => o.id !== id || o.ver !== ver)) {
+      throw new Error("one official plugin version per pull request");
+    }
     if (!headRepo || headRepo !== indexRepo) {
       throw new Error("official listings must come from the index repository, not a fork");
     }
-    await checkOfficial(files[0], official[0].id, official[0].ver);
+    for (const o of official) {
+      await checkOfficial(`official/${o.id}/${o.ver}/${o.plat}.json`, o.id, o.ver, o.plat);
+    }
     return;
   }
   if (files.length === 0 || files.length !== community.length) {
