@@ -15,6 +15,7 @@ import {
   sha256Hex,
   signPayload,
   sortPlugins,
+  listingCompat,
   unpackTsp2,
   verifyRelease,
 } from "./lib.mjs";
@@ -157,6 +158,7 @@ async function ingestCommunity(file, origin, packs) {
     pack_sha256: sha256Hex(artifact),
     pack_bytes: artifact.length,
     pack: { volume: "tianshu48/tianshu-plugin-packs", tag, path: packPath },
+    ...listingCompat(p),
   });
   mkdirSync(dirname(`ingested/${p.plugin_id}/${p.version}.json`), { recursive: true });
   renameSync(file, `ingested/${p.plugin_id}/${p.version}.json`);
@@ -181,6 +183,7 @@ async function ingestOfficial(file, packs) {
     pack_sha256: sha256Hex(artifact),
     pack_bytes: artifact.length,
     pack: { volume: "tianshu48/tianshu-plugin-packs", tag, path: packPath },
+    ...listingCompat(p),
   });
   mkdirSync(dirname(`ingested/official/${p.plugin_id}/${p.version}.json`), { recursive: true });
   renameSync(file, `ingested/official/${p.plugin_id}/${p.version}.json`);

@@ -10,6 +10,8 @@ import {
   officialPluginId,
   parseOfficialProposal,
   SHARD_MAX_BYTES,
+  listingCompat,
+  sortPlugins,
   unpackTsp2,
 } from "./lib.mjs";
 
@@ -100,4 +102,21 @@ test("buildShards splits on byte cap across different ids", () => {
   const shards = buildShards([fat, { plugin_id: "bbb.small", version: "1" }]);
   assert.equal(shards.length, 2);
   assert.equal(shards[1].id_lo, "bbb.small");
+});
+
+test("sortPlugins uses semver not lexicographic version", () => {
+  const plugins = [
+    { plugin_id: "alice.dice", version: "1.0.10" },
+    { plugin_id: "alice.dice", version: "1.0.9" },
+  ];
+  sortPlugins(plugins);
+  assert.equal(plugins[1].version, "1.0.10");
+});
+
+test("listingCompat keeps free paid and engines", () => {
+  assert.deepEqual(listingCompat({ paid: false, engines: { tianshu: ">=1.2.0" } }), {
+    paid: false,
+    engines: { tianshu: ">=1.2.0" },
+  });
+  assert.deepEqual(listingCompat({}), {});
 });
